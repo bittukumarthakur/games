@@ -1,0 +1,59 @@
+#! /bin/bash
+
+# make pattern like this 
+# \/ / / /  \ \ \
+# \  / / / /\ \ \ 
+# /  \ \/ / /  \ \
+# /\ \  / / /\ \ 
+# /  \/ / /  \ \ \
+# /\  / / /\ \ \ 
+# / / /  \ \/  \ \
+# / / /\ \  /\ \ 
+
+# small tile
+# \/ 
+#\  /
+
+function tiles () { 
+  local TILE_NUMBER=$1
+  local TILE_1="/\\\\\n\/"
+  local TIlE_2="\/\n/\\"
+  if [ $TILE_NUMBER = 1 ];then
+    echo -e "$TILE_1"
+  else
+    echo -e "$TIlE_2"
+  fi
+}
+
+function random () {
+  jot -r 1 1 2
+}
+
+
+function row_tiles () {
+
+  local NUMBER_OF_TILES_IN_ROWS=$1
+  local COUNTER=0
+  while [ $COUNTER -lt $NUMBER_OF_TILES_IN_ROWS ];do
+
+    COUNTER=$(dc -e "$COUNTER 1 + p")
+    TILE_NUMBER=$(random)
+    local UPPER_PORTION="$UPPER_PORTION$(tiles $TILE_NUMBER | head -n1)"
+    local LOWER_PORTION="$LOWER_PORTION$(tiles $TILE_NUMBER | tail -n1)"
+  done
+  echo "$UPPER_PORTION"
+  echo "$LOWER_PORTION"
+}
+
+function generate_tiles_pattern () {
+
+  local NUMBER_OF_TILES_IN_ROWS=$1
+  local NUMBER_OF_TILES_IN_COLUMNS=$2
+  local COUNTER=0
+  while [ $COUNTER -lt $NUMBER_OF_TILES_IN_COLUMNS ];do
+    COUNTER=$(dc -e "$COUNTER 1 + p")
+    row_tiles $NUMBER_OF_TILES_IN_ROWS
+  done
+}
+
+generate_tiles_pattern 20 10

@@ -1,0 +1,33 @@
+#! /bin/zsh
+
+# Aim: to generate math-expression and check the result that is given by user.
+
+# Example: 
+# evaluate the expression: 5 + 6 = 11 -> correct
+# evaluate the expression: 4 + 2 = 7 -> wrong. Answer should be 6.
+
+function generate_random_number() {
+jot -n  -r 1 $1 $2 
+}
+
+function generate_random_operator() {
+ echo "+\n-\n*\n/" | sort -R | head -n1
+}
+
+
+
+FIRST_TERM=$(generate_random_number 1 10)
+OPERATOR=$(generate_random_operator)
+SECOND_TERM=$(generate_random_number 1 10)
+
+ACTUAL=$(dc -e "$FIRST_TERM $SECOND_TERM $OPERATOR p")
+
+echo -n "$FIRST_TERM $OPERATOR $SECOND_TERM = "
+read EXPECTED
+
+while [ $EXPECTED -ne $ACTUAL ]; do
+echo "wrong."
+echo -n "$FIRST_TERM $OPERATOR $SECOND_TERM = "
+read EXPECTED
+done
+  echo "corect"
